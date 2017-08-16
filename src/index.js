@@ -3,12 +3,14 @@
 class CircleSlider {
   /**
    * Creates an instance of CircleSlider inside the element with the id `targetId`
-   * @param {String} targetId    The id of the element to contain the circle slider.
+   * @param {String} targetId         The id of the element to contain the circle slider.
+   * @param {Number} [snapMultiplier] Makes the handle snap to every multiple of this number.
    * @memberof CircleSlider
    */
-  constructor(targetId) {
+  constructor(targetId, snapMultiplier) {
     this.root = document.getElementById(targetId);
     this.outputAngle = 0;
+    this.snapMultiplier = snapMultiplier;
 
     // validation
     if (!this.root) { 
@@ -110,8 +112,25 @@ class CircleSlider {
   }
 
   _moveHandle(rawAngle) {
+    // snap handle to multiples of snapMultiplier
+    if (this.snapMultiplier) {
+      const sm = this.snapMultiplier;
+      const delta = Math.abs(rawAngle - (Math.round(rawAngle / sm) * sm));
+      if (delta <= 5) {
+        rawAngle = Math.round(rawAngle / sm) * sm;
+      }
+    }
+
+    // move the handle visually
     this.hc.style.cssText = `transform: rotate(${rawAngle}deg);`;
-    this.outputAngle = 360 - Math.round(rawAngle);
+
+    // format angle that gets exposed
+    let outputAngle = 360 - Math.round(rawAngle);
+    if (outputAngle === 360) {
+      outputAngle = 0;
+    }
+    this.outputAngle = outputAngle; 
+
     this._fireEvent(this.events.sliderMove, this.outputAngle);
   }
 
