@@ -4,7 +4,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>willwull/circle-slider</title>
-  <link rel="stylesheet" href="demopage.css">
+  <link href="https://fonts.googleapis.com/css?family=Crete+Round|Lato" rel="stylesheet">
+  <link rel="stylesheet" href="demopage.css"> <!-- demo specific CSS -->
   <link rel="stylesheet" href="src/default.css">
 </head>
 <body>
@@ -16,10 +17,10 @@
   </div>
   <script src="src/index.js"></script>
   <script>
-    let cs = new CircleSlider("slider", 0, 0, 360);
+    let cs = new CircleSlider("slider", 45);
     let targetDiv = document.getElementById("angle");
     cs.on("sliderMove", e => {
-      targetDiv.innerHTML = "&nbsp;&nbsp;" + e.detail + "&deg;";
+      targetDiv.innerHTML = "&nbsp;" + e.detail + "&deg;";
     });
   </script>
 </body>
