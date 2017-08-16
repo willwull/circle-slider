@@ -10,6 +10,7 @@ class CircleSlider {
    * @memberof CircleSlider
    */
   constructor(targetId, startVal, minVal, maxVal) {
+    this.outputAngle = startVal;
     this.root = document.getElementById(targetId);
 
     // validation
@@ -36,6 +37,12 @@ class CircleSlider {
     this.hc.appendChild(this.handle);
     this.root.appendChild(this.hc);
 
+    // just to keep track of all event names
+    this.events = {
+      sliderMove: "sliderMove",
+      sliderUp: "sliderUp"
+    }
+
     // active is true when user is holding down handle
     this.active = false;
     // mouse events
@@ -43,25 +50,51 @@ class CircleSlider {
     // touch events
     this._addEventListeners("touchstart", "touchmove", "touchend");
 
-    // bind functions
+    // bind methods
     this._mouseMoveHandler = this._mouseMoveHandler.bind(this);
   }
 
+  // public methods
+
+  /**
+   * on
+   * Use this function to call a callback function to react to
+   * synthetic events from this class.
+   * 
+   * @param {String}    The name of the event to listen to 
+   * @param {Function}  The callback function for the event 
+   * @memberof CircleSlider
+   */
+  on(name, callback) {
+    const eventName = this.root.id + "-" + name;
+    this.root.addEventListener(eventName, callback);
+  }
+
+  // "private" methods
+
+  _fireEvent(name, data) {
+    const eventName = this.root.id + "-" + name;
+    const event = new CustomEvent(eventName, { detail: data });
+    this.root.dispatchEvent(event);
+  }
+
   _addEventListeners(startEvent, moveEvent, endEvent) {
+    // user presses handle
     this.handle.addEventListener(startEvent, (e) => {
       // prevent text selection
       e.preventDefault();
 
       if (!this.active) {
         this.active = true;
-        // add eventListener on document instead of handler so that
-        // dragging keeps working when the mouse is outside the root element
+
+        // user moves handle
         document.addEventListener(moveEvent, this._mouseMoveHandler, false);
-        // add to document for the same reason as above, the user can
-        // release the mouse outside the root element
+
+        // user lets go
         document.addEventListener(endEvent, () => {
           this.active = false;
           document.removeEventListener(moveEvent, this._mouseMoveHandler, false);
+          this._fireEvent(this.events.sliderUp, this.outputAngle);
         })
       }
     })
@@ -71,6 +104,9 @@ class CircleSlider {
     e.preventDefault();
     const angle = this.getAngle(e);
     this.hc.style.cssText = `transform: rotate(${angle}deg);`;
+
+    this.outputAngle = 360-Math.round(angle);
+    this._fireEvent(this.events.sliderMove, this.outputAngle);
   }
 
   _getCenter(elem) {
