@@ -1,8 +1,5 @@
 #slider {
   position: relative;
-}
-
-#slider .cs-bg {
   border-radius: 100%;
   background: linear-gradient(90deg, #FF9A9E, #FAD0C4);
 }
@@ -19,10 +16,10 @@
 #slider .cs-handle {
   cursor: default;
   position: absolute;
-  right: -12px;
+  right: -15px;
   transform: translateY(-50%);
-  height: 25px;
-  width: 25px;
+  height: 30px;
+  width: 30px;
   border-radius: 100%;
   background: linear-gradient(180deg, #FFFFFF, #efefef);
   box-shadow: rgba(0, 0, 0, 0.3) 0 1px 10px 0;
