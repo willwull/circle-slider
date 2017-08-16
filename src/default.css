@@ -1,0 +1,34 @@
+#slider {
+  position: relative;
+}
+
+#slider .cs-bg {
+  border-radius: 100%;
+  background: linear-gradient(90deg, #FF9A9E, #FAD0C4);
+}
+
+#slider .cs-handle-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: red;
+}
+
+#slider .cs-handle {
+  cursor: default;
+  position: absolute;
+  right: -12px;
+  transform: translateY(-50%);
+  height: 25px;
+  width: 25px;
+  border-radius: 100%;
+  background: linear-gradient(180deg, #FFFFFF, #efefef);
+  box-shadow: rgba(0, 0, 0, 0.3) 0 1px 10px 0;
+}
+
+#slider .cs-handle:active {
+  background: linear-gradient(180deg, #EBEBEB, #DFDFDF)
+}
