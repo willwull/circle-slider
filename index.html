@@ -11,11 +11,16 @@
   <div class="container">
     <h1>Circle Slider</h1>
     <div id="slider">
+      <div id="angle">0&deg;</div>
     </div>
   </div>
   <script src="src/index.js"></script>
   <script>
     let cs = new CircleSlider("slider", 0, 0, 360);
+    let targetDiv = document.getElementById("angle");
+    cs.on("sliderMove", e => {
+      targetDiv.innerHTML = "&nbsp;&nbsp;" + e.detail + "&deg;";
+    });
   </script>
 </body>
 </html>
