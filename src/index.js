@@ -36,27 +36,35 @@ class CircleSlider {
     this.hc.appendChild(this.handle);
     this.root.appendChild(this.hc);
 
-    this.mouseDown = false;
-    this.handle.addEventListener("mousedown", (e) => {
-      // prevent text selection
-      e.preventDefault();
-      
-      if (!this.mouseDown) {
-        this.mouseDown = true;
-        // add eventListener on document instead of handler so that
-        // dragging keeps working when the mouse is outside the root element
-        document.addEventListener("mousemove", this._mouseMoveHandler, false);
-        // add to document for the same reason as above, the user can
-        // release the mouse outside the root element
-        document.addEventListener("mouseup", () => {
-          this.mouseDown = false;
-          document.removeEventListener("mousemove", this._mouseMoveHandler, false);
-        })
-      }
-    })
+    // active is true when user is holding down handle
+    this.active = false;
+    // mouse events
+    this._addEventListeners("mousedown", "mousemove", "mouseup");
+    // touch events
+    this._addEventListeners("touchstart", "touchmove", "touchend");
 
     // bind functions
     this._mouseMoveHandler = this._mouseMoveHandler.bind(this);
+  }
+
+  _addEventListeners(startEvent, moveEvent, endEvent) {
+    this.handle.addEventListener(startEvent, (e) => {
+      // prevent text selection
+      e.preventDefault();
+
+      if (!this.active) {
+        this.active = true;
+        // add eventListener on document instead of handler so that
+        // dragging keeps working when the mouse is outside the root element
+        document.addEventListener(moveEvent, this._mouseMoveHandler, false);
+        // add to document for the same reason as above, the user can
+        // release the mouse outside the root element
+        document.addEventListener(endEvent, () => {
+          this.active = false;
+          document.removeEventListener(moveEvent, this._mouseMoveHandler, false);
+        })
+      }
+    })
   }
 
   _mouseMoveHandler(e) {
