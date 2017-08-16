@@ -1,0 +1,23 @@
+{
+  "name": "circle-slider",
+  "version": "0.1.0",
+  "description": "A slider, except it's round",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "http": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willwull/circle-slider.git"
+  },
+  "author": "Willy Liu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/willwull/circle-slider/issues"
+  },
+  "homepage": "https://github.com/willwull/circle-slider#readme",
+  "devDependencies": {
+    "http-server": "^0.10.0"
+  }
+}
