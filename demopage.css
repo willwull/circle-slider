@@ -11,12 +11,12 @@ h1 {
 }
 
 .container {
-  width: 500px;
+  max-width: 500px;
   margin: 0 auto;
 }
 
 #slider {
-  height: 400px;
-  width: 400px;
+  height: 350px;
+  width: 350px;
   margin: 0 auto;
 }
