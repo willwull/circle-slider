@@ -1,3 +1,11 @@
+:root {
+  --slider-size: 350px;
+}
+@media (max-width: 576px) {
+  :root {
+    --slider-size: 230px;
+  }
+}
 
 html, body {
   margin: 0;
@@ -16,8 +24,8 @@ h1 {
 }
 
 #slider {
-  height: 350px;
-  width: 350px;
+  height: var(--slider-size);
+  width: var(--slider-size);
   margin: 0 auto;
 }
 
