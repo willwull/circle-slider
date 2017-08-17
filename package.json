@@ -1,11 +1,12 @@
 {
   "name": "circle-slider",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A slider, except it's round",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "http": "http-server"
+    "http": "http-server",
+    "build": "babel src -d lib"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,8 @@
   },
   "homepage": "https://github.com/willwull/circle-slider#readme",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
     "http-server": "^0.10.0"
   }
 }
