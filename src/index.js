@@ -108,7 +108,7 @@ class CircleSlider {
 
   _mouseMoveHandler(e) {
     e.preventDefault();
-    this._moveHandle(this.getAngle(e));
+    this._moveHandle(this._getRawAngle(e));
   }
 
   _moveHandle(rawAngle) {
@@ -146,7 +146,7 @@ class CircleSlider {
     return rad * (180 / Math.PI);
   }
 
-  getAngle(e) {
+  _getRawAngle(e) {
     const pivot = this._getCenter(this.root);
     const mouse = {
       x: e.pageX,
