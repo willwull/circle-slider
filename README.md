@@ -2,12 +2,26 @@
 A slider, except it's round.
 Pretty good for selecting angles and stuff.
 
+[Demo here.](https://willwull.github.io/circle-slider/)
+
+# Install
+```
+$ npm i circle-slider
+```
+
 ## Usage
 Basic usage:
+
+HTML:
 ``` html
 <div id="whatever"></div>
 ```
+
+JS:
 ``` js
+const CircleSlider = require("circle-slider");
+
+// or ES6 style
 import CircleSlider from "circle-slider";
 
 let cs = new CircleSlider("whatever");
@@ -16,6 +30,8 @@ let cs = new CircleSlider("whatever");
 All you have to do on the HTML side is to create a div with some id, which is the first parameter in the constructor of CircleSlider.
 
 The div doesn't *have* to be empty, but you don't *need* to add anything for it to work; the handle will be created automatically for you.
+
+Remember to use Browserify/Webpack/whatever to handle the import.
 
 ### Options
 You can make the handle snap to multiples of some number, e.g. snap to every multiple of 45 by passing 45 as the optional second parameter.
@@ -47,7 +63,7 @@ cs.on("sliderUp", callbackFunction);
 ```
 
 ## Styling
-I leave all styling up to you! Here are some good defaults to try out:
+I leave most styling up to you! Here are some good defaults to get started with:
 
 ``` css
 #slider {
@@ -56,6 +72,8 @@ I leave all styling up to you! Here are some good defaults to try out:
   border-radius: 100%;
 
   /* Other than the above two, go wild! */
+  height: 300px;
+  width: 300px;
   background: linear-gradient(90deg, #FF9A9E, #FAD0C4);
 }
 

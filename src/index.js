@@ -172,3 +172,5 @@ class CircleSlider {
     return h;
   }
 }
+
+module.exports = CircleSlider;
