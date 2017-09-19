@@ -1,5 +1,3 @@
-"use strict";
-
 class CircleSlider {
   /**
    * Creates an instance of CircleSlider inside the element with the id `targetId`
@@ -13,21 +11,21 @@ class CircleSlider {
     this.snapMultiplier = snapMultiplier;
 
     // validation
-    if (!this.root) { 
-      console.error("CircleSlider: Didn't find any element with id " + targetId); 
+    if (!this.root) {
+      console.error(`CircleSlider: Didn't find any element with id ${targetId}`);
     }
 
     // create the child elements and append them
-    this.hc = this._createHandleContainerElem();
-    this.handle = this._createHandleElem();
+    this.hc = CircleSlider._createHandleContainerElem();
+    this.handle = CircleSlider._createHandleElem();
     this.hc.appendChild(this.handle);
     this.root.appendChild(this.hc);
 
     // just to keep track of all event names
     this.events = {
       sliderMove: "sliderMove",
-      sliderUp: "sliderUp"
-    }
+      sliderUp: "sliderUp",
+    };
 
     // active is true when user is holding down handle
     this.active = false;
@@ -45,19 +43,19 @@ class CircleSlider {
   /**
    * Use this function to call a callback function to react to
    * synthetic events from this class.
-   * 
-   * @param {String}    The name of the event to listen to 
-   * @param {Function}  The callback function for the event 
+   *
+   * @param {String}    The name of the event to listen to
+   * @param {Function}  The callback function for the event
    * @memberof CircleSlider
    */
   on(name, callback) {
-    const eventName = this.root.id + "-" + name;
+    const eventName = `${this.root.id}-${name}`;
     this.root.addEventListener(eventName, callback);
   }
 
   /**
    * Returns the angle/value of the slider.
-   * 
+   *
    * @returns The current value
    * @memberof CircleSlider
    */
@@ -67,7 +65,7 @@ class CircleSlider {
 
   /**
    * Manually sets the angle/value of the slider.
-   * 
+   *
    * @param {Number} angle  The new value for the slider
    * @memberof CircleSlider
    */
@@ -79,7 +77,7 @@ class CircleSlider {
   // "private" methods
 
   _fireEvent(name, data) {
-    const eventName = this.root.id + "-" + name;
+    const eventName = `${this.root.id}-${name}`;
     const event = new CustomEvent(eventName, { detail: data });
     this.root.dispatchEvent(event);
   }
@@ -101,9 +99,9 @@ class CircleSlider {
           this.active = false;
           document.removeEventListener(moveEvent, this._mouseMoveHandler, false);
           this._fireEvent(this.events.sliderUp, this.outputAngle);
-        })
+        });
       }
-    })
+    });
   }
 
   _mouseMoveHandler(e) {
@@ -112,29 +110,43 @@ class CircleSlider {
   }
 
   _moveHandle(rawAngle) {
+    let angle = rawAngle;
     // snap handle to multiples of snapMultiplier
     if (this.snapMultiplier) {
       const sm = this.snapMultiplier;
-      const delta = Math.abs(rawAngle - (Math.round(rawAngle / sm) * sm));
+      const delta = Math.abs(angle - (Math.round(angle / sm) * sm));
       if (delta <= 5) {
-        rawAngle = Math.round(rawAngle / sm) * sm;
+        angle = Math.round(angle / sm) * sm;
       }
     }
 
     // move the handle visually
-    this.hc.style.cssText = `transform: rotate(${rawAngle}deg);`;
+    this.hc.style.cssText = `transform: rotate(${angle}deg);`;
 
     // format angle that gets exposed
-    let outputAngle = 360 - Math.round(rawAngle);
+    let outputAngle = 360 - Math.round(angle);
     if (outputAngle === 360) {
       outputAngle = 0;
     }
-    this.outputAngle = outputAngle; 
+    this.outputAngle = outputAngle;
 
     this._fireEvent(this.events.sliderMove, this.outputAngle);
   }
 
-  _getCenter(elem) {
+  _getRawAngle(e) {
+    const pivot = CircleSlider._getCenter(this.root);
+    const mouse = {
+      x: e.pageX,
+      y: e.pageY,
+    };
+    const offset = -90;
+    let angle = CircleSlider._radToDeg(Math.atan2(mouse.x - pivot.x, -(mouse.y - pivot.y)))
+     + offset;
+    if (angle < 0) angle += 360;
+    return angle;
+  }
+
+  static _getCenter(elem) {
     const rect = elem.getBoundingClientRect();
     return {
       x: rect.left + (rect.width / 2),
@@ -142,32 +154,20 @@ class CircleSlider {
     };
   }
 
-  _radToDeg(rad) {
+  static _radToDeg(rad) {
     return rad * (180 / Math.PI);
-  }
-
-  _getRawAngle(e) {
-    const pivot = this._getCenter(this.root);
-    const mouse = {
-      x: e.pageX,
-      y: e.pageY,
-    }
-    const offset = -90;
-    let angle = this._radToDeg(Math.atan2(mouse.x - pivot.x, -(mouse.y - pivot.y))) + offset;
-    if (angle < 0) angle += 360;
-    return angle;
   }
 
   // Uninteresting methods
 
-  _createHandleContainerElem() {
-    let hc = document.createElement("div");
+  static _createHandleContainerElem() {
+    const hc = document.createElement("div");
     hc.className = "cs-handle-container";
     return hc;
   }
 
-  _createHandleElem() {
-    let h = document.createElement("div");
+  static _createHandleElem() {
+    const h = document.createElement("div");
     h.className = "cs-handle";
     return h;
   }
