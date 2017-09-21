@@ -25,5 +25,8 @@
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0",
     "http-server": "^0.10.0"
+  },
+  "dependencies": {
+    "events": "^1.1.1"
   }
 }
