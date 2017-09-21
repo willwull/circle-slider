@@ -44,8 +44,8 @@ class CircleSlider {
    * Use this function to call a callback function to react to
    * synthetic events from this class.
    *
-   * @param {String}    The name of the event to listen to
-   * @param {Function}  The callback function for the event
+   * @param {String} name       The name of the event to listen to
+   * @param {Function} callback The callback function for the event
    * @memberof CircleSlider
    */
   on(name, callback) {
