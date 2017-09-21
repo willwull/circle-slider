@@ -15,13 +15,6 @@
       <div id="angle">0&deg;</div>
     </div>
   </div>
-  <script src="lib/index.js"></script>
-  <script>
-    let cs = new CircleSlider("slider", 45);
-    let targetDiv = document.getElementById("angle");
-    cs.on("sliderMove", e => {
-      targetDiv.innerHTML = "&nbsp;" + e.detail + "&deg;";
-    });
-  </script>
+  <script src="demo.build.js"></script>
 </body>
 </html>
