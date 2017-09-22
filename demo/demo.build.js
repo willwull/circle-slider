@@ -99,19 +99,6 @@ var CircleSlider = function (_EventEmitter) {
   // public methods
 
   /**
-   * Use this function to call a callback function to react to
-   * synthetic events from this class.
-   *
-   * @param {String} name       The name of the event to listen to
-   * @param {Function} callback The callback function for the event
-   * @memberof CircleSlider
-   */
-  /* on(name, callback) {
-    const eventName = `${this.root.id}-${name}`;
-    this.root.addEventListener(eventName, callback);
-  } */
-
-  /**
    * Returns the angle/value of the slider.
    *
    * @returns The current value
@@ -141,14 +128,6 @@ var CircleSlider = function (_EventEmitter) {
     // "private" methods
 
   }, {
-    key: "_fireEvent",
-    value: function _fireEvent(name, data) {
-      // const eventName = `${this.root.id}-${name}`;
-      // const event = new CustomEvent(eventName, { detail: data });
-      // this.root.dispatchEvent(event);
-      this.emit(name, data);
-    }
-  }, {
     key: "_addEventListeners",
     value: function _addEventListeners(startEvent, moveEvent, endEvent) {
       var _this2 = this;
@@ -168,7 +147,7 @@ var CircleSlider = function (_EventEmitter) {
           document.addEventListener(endEvent, function () {
             _this2.active = false;
             document.removeEventListener(moveEvent, _this2._mouseMoveHandler, false);
-            _this2._fireEvent(_this2.events.sliderUp, _this2.outputAngle);
+            _this2.emit(_this2.events.sliderUp, _this2.outputAngle);
           });
         }
       });
@@ -202,7 +181,7 @@ var CircleSlider = function (_EventEmitter) {
       }
       this.outputAngle = outputAngle;
 
-      this._fireEvent(this.events.sliderMove, this.outputAngle);
+      this.emit(this.events.sliderMove, this.outputAngle);
     }
   }, {
     key: "_getRawAngle",

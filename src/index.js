@@ -44,19 +44,6 @@ class CircleSlider extends EventEmitter {
   // public methods
 
   /**
-   * Use this function to call a callback function to react to
-   * synthetic events from this class.
-   *
-   * @param {String} name       The name of the event to listen to
-   * @param {Function} callback The callback function for the event
-   * @memberof CircleSlider
-   */
-  /* on(name, callback) {
-    const eventName = `${this.root.id}-${name}`;
-    this.root.addEventListener(eventName, callback);
-  } */
-
-  /**
    * Returns the angle/value of the slider.
    *
    * @returns The current value
@@ -79,13 +66,6 @@ class CircleSlider extends EventEmitter {
 
   // "private" methods
 
-  _fireEvent(name, data) {
-    // const eventName = `${this.root.id}-${name}`;
-    // const event = new CustomEvent(eventName, { detail: data });
-    // this.root.dispatchEvent(event);
-    this.emit(name, data);
-  }
-
   _addEventListeners(startEvent, moveEvent, endEvent) {
     // user presses handle
     this.handle.addEventListener(startEvent, (e) => {
@@ -102,7 +82,7 @@ class CircleSlider extends EventEmitter {
         document.addEventListener(endEvent, () => {
           this.active = false;
           document.removeEventListener(moveEvent, this._mouseMoveHandler, false);
-          this._fireEvent(this.events.sliderUp, this.outputAngle);
+          this.emit(this.events.sliderUp, this.outputAngle);
         });
       }
     });
@@ -134,7 +114,7 @@ class CircleSlider extends EventEmitter {
     }
     this.outputAngle = outputAngle;
 
-    this._fireEvent(this.events.sliderMove, this.outputAngle);
+    this.emit(this.events.sliderMove, this.outputAngle);
   }
 
   _getRawAngle(e) {
