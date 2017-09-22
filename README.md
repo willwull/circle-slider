@@ -19,12 +19,14 @@ HTML:
 
 JS:
 ``` js
+// Import the module at the top of your file
 const CircleSlider = require("circle-slider");
 
 // or ES6 style
 import CircleSlider from "circle-slider";
 
-let cs = new CircleSlider("whatever");
+// The id of your target element as the first arg
+const cs = new CircleSlider("whatever");
 ```
 
 All you have to do on the HTML side is to create a div with some id, which is the first parameter in the constructor of CircleSlider.
@@ -49,17 +51,18 @@ cs.getAngle();
 // set the angle manually
 cs.setAngle(45);
 
-// call `callbackFunction` every time the slider is moved
-cs.on("sliderMove", callbackFunction);
-
-// get the angle with `e.detail`
-cs.on("sliderMove", (e) => {
-    someDiv.textContent = e.detail;
+// fires every time the slider is moved
+// the emitted event will give you the angle
+cs.on("sliderMove", (angle) => {
+    someDiv.textContent = angle;
 })
 
-// call `callbackFunction` every time the handle stops moving
-// same as above, get the angle with `e.detail`
-cs.on("sliderUp", callbackFunction);
+// fires every time the handle stops moving
+// can be useful to avoid heavy operations every time the
+// handle moves
+cs.on("sliderUp", (angle) => {
+    someDiv.textContent = angle;
+})
 ```
 
 ## Styling
