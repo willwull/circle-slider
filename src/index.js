@@ -1,4 +1,6 @@
-class CircleSlider {
+const EventEmitter = require("events").EventEmitter;
+
+class CircleSlider extends EventEmitter {
   /**
    * Creates an instance of CircleSlider inside the element with the id `targetId`
    * @param {String} targetId         The id of the element to contain the circle slider.
@@ -6,6 +8,7 @@ class CircleSlider {
    * @memberof CircleSlider
    */
   constructor(targetId, snapMultiplier) {
+    super();
     this.root = document.getElementById(targetId);
     this.outputAngle = 0;
     this.snapMultiplier = snapMultiplier;
@@ -48,10 +51,10 @@ class CircleSlider {
    * @param {Function} callback The callback function for the event
    * @memberof CircleSlider
    */
-  on(name, callback) {
+  /* on(name, callback) {
     const eventName = `${this.root.id}-${name}`;
     this.root.addEventListener(eventName, callback);
-  }
+  } */
 
   /**
    * Returns the angle/value of the slider.
@@ -77,9 +80,10 @@ class CircleSlider {
   // "private" methods
 
   _fireEvent(name, data) {
-    const eventName = `${this.root.id}-${name}`;
-    const event = new CustomEvent(eventName, { detail: data });
-    this.root.dispatchEvent(event);
+    // const eventName = `${this.root.id}-${name}`;
+    // const event = new CustomEvent(eventName, { detail: data });
+    // this.root.dispatchEvent(event);
+    this.emit(name, data);
   }
 
   _addEventListeners(startEvent, moveEvent, endEvent) {
