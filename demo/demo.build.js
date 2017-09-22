@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
-var CircleSlider = require("./src/index.js");
+var CircleSlider = require("../lib/index.js");
 
 var cs = new CircleSlider("slider", 45);
 var targetDiv = document.getElementById("angle");
@@ -14,7 +14,248 @@ cs.on("sliderUp", function (angle) {
   console.log("sliderUp " + angle);
 });
 
-},{"./src/index.js":3}],2:[function(require,module,exports){
+},{"../lib/index.js":2}],2:[function(require,module,exports){
+"use strict";
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+}();
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var EventEmitter = require("events").EventEmitter;
+
+var CircleSlider = function (_EventEmitter) {
+  _inherits(CircleSlider, _EventEmitter);
+
+  /**
+   * Creates an instance of CircleSlider inside the element with the id `targetId`
+   * @param {String} targetId         The id of the element to contain the circle slider.
+   * @param {Number} [snapMultiplier] Makes the handle snap to every multiple of this number.
+   * @memberof CircleSlider
+   */
+  function CircleSlider(targetId, snapMultiplier) {
+    _classCallCheck(this, CircleSlider);
+
+    var _this = _possibleConstructorReturn(this, (CircleSlider.__proto__ || Object.getPrototypeOf(CircleSlider)).call(this));
+
+    _this.root = document.getElementById(targetId);
+    _this.outputAngle = 0;
+    _this.snapMultiplier = snapMultiplier;
+
+    // validation
+    if (!_this.root) {
+      console.error("CircleSlider: Didn't find any element with id " + targetId);
+    }
+
+    // create the child elements and append them
+    _this.hc = CircleSlider._createHandleContainerElem();
+    _this.handle = CircleSlider._createHandleElem();
+    _this.hc.appendChild(_this.handle);
+    _this.root.appendChild(_this.hc);
+
+    // just to keep track of all event names
+    _this.events = {
+      sliderMove: "sliderMove",
+      sliderUp: "sliderUp"
+    };
+
+    // active is true when user is holding down handle
+    _this.active = false;
+    // mouse events
+    _this._addEventListeners("mousedown", "mousemove", "mouseup");
+    // touch events
+    _this._addEventListeners("touchstart", "touchmove", "touchend");
+
+    // bind methods
+    _this._mouseMoveHandler = _this._mouseMoveHandler.bind(_this);
+    return _this;
+  }
+
+  // public methods
+
+  /**
+   * Use this function to call a callback function to react to
+   * synthetic events from this class.
+   *
+   * @param {String} name       The name of the event to listen to
+   * @param {Function} callback The callback function for the event
+   * @memberof CircleSlider
+   */
+  /* on(name, callback) {
+    const eventName = `${this.root.id}-${name}`;
+    this.root.addEventListener(eventName, callback);
+  } */
+
+  /**
+   * Returns the angle/value of the slider.
+   *
+   * @returns The current value
+   * @memberof CircleSlider
+   */
+
+  _createClass(CircleSlider, [{
+    key: "getAngle",
+    value: function getAngle() {
+      return this.outputAngle;
+    }
+
+    /**
+     * Manually sets the angle/value of the slider.
+     *
+     * @param {Number} angle  The new value for the slider
+     * @memberof CircleSlider
+     */
+
+  }, {
+    key: "setAngle",
+    value: function setAngle(angle) {
+      var rawAngle = 360 - angle;
+      this._moveHandle(rawAngle);
+    }
+
+    // "private" methods
+
+  }, {
+    key: "_fireEvent",
+    value: function _fireEvent(name, data) {
+      // const eventName = `${this.root.id}-${name}`;
+      // const event = new CustomEvent(eventName, { detail: data });
+      // this.root.dispatchEvent(event);
+      this.emit(name, data);
+    }
+  }, {
+    key: "_addEventListeners",
+    value: function _addEventListeners(startEvent, moveEvent, endEvent) {
+      var _this2 = this;
+
+      // user presses handle
+      this.handle.addEventListener(startEvent, function (e) {
+        // prevent text selection
+        e.preventDefault();
+
+        if (!_this2.active) {
+          _this2.active = true;
+
+          // user moves handle
+          document.addEventListener(moveEvent, _this2._mouseMoveHandler, false);
+
+          // user lets go
+          document.addEventListener(endEvent, function () {
+            _this2.active = false;
+            document.removeEventListener(moveEvent, _this2._mouseMoveHandler, false);
+            _this2._fireEvent(_this2.events.sliderUp, _this2.outputAngle);
+          });
+        }
+      });
+    }
+  }, {
+    key: "_mouseMoveHandler",
+    value: function _mouseMoveHandler(e) {
+      e.preventDefault();
+      this._moveHandle(this._getRawAngle(e));
+    }
+  }, {
+    key: "_moveHandle",
+    value: function _moveHandle(rawAngle) {
+      var angle = rawAngle;
+      // snap handle to multiples of snapMultiplier
+      if (this.snapMultiplier) {
+        var sm = this.snapMultiplier;
+        var delta = Math.abs(angle - Math.round(angle / sm) * sm);
+        if (delta <= 5) {
+          angle = Math.round(angle / sm) * sm;
+        }
+      }
+
+      // move the handle visually
+      this.hc.style.cssText = "transform: rotate(" + angle + "deg);";
+
+      // format angle that gets exposed
+      var outputAngle = 360 - Math.round(angle);
+      if (outputAngle === 360) {
+        outputAngle = 0;
+      }
+      this.outputAngle = outputAngle;
+
+      this._fireEvent(this.events.sliderMove, this.outputAngle);
+    }
+  }, {
+    key: "_getRawAngle",
+    value: function _getRawAngle(e) {
+      var pivot = CircleSlider._getCenter(this.root);
+      var mouse = {
+        x: e.pageX,
+        y: e.pageY
+      };
+      var offset = -90;
+      var angle = CircleSlider._radToDeg(Math.atan2(mouse.x - pivot.x, -(mouse.y - pivot.y))) + offset;
+      if (angle < 0) angle += 360;
+      return angle;
+    }
+  }], [{
+    key: "_getCenter",
+    value: function _getCenter(elem) {
+      var rect = elem.getBoundingClientRect();
+      return {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+    }
+  }, {
+    key: "_radToDeg",
+    value: function _radToDeg(rad) {
+      return rad * (180 / Math.PI);
+    }
+
+    // Uninteresting methods
+
+  }, {
+    key: "_createHandleContainerElem",
+    value: function _createHandleContainerElem() {
+      var hc = document.createElement("div");
+      hc.className = "cs-handle-container";
+      return hc;
+    }
+  }, {
+    key: "_createHandleElem",
+    value: function _createHandleElem() {
+      var h = document.createElement("div");
+      h.className = "cs-handle";
+      return h;
+    }
+  }]);
+
+  return CircleSlider;
+}(EventEmitter);
+
+module.exports = CircleSlider;
+
+},{"events":3}],3:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -318,224 +559,4 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],3:[function(require,module,exports){
-"use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var EventEmitter = require("events").EventEmitter;
-
-var CircleSlider = function (_EventEmitter) {
-  _inherits(CircleSlider, _EventEmitter);
-
-  /**
-   * Creates an instance of CircleSlider inside the element with the id `targetId`
-   * @param {String} targetId         The id of the element to contain the circle slider.
-   * @param {Number} [snapMultiplier] Makes the handle snap to every multiple of this number.
-   * @memberof CircleSlider
-   */
-  function CircleSlider(targetId, snapMultiplier) {
-    _classCallCheck(this, CircleSlider);
-
-    var _this = _possibleConstructorReturn(this, (CircleSlider.__proto__ || Object.getPrototypeOf(CircleSlider)).call(this));
-
-    _this.root = document.getElementById(targetId);
-    _this.outputAngle = 0;
-    _this.snapMultiplier = snapMultiplier;
-
-    // validation
-    if (!_this.root) {
-      console.error("CircleSlider: Didn't find any element with id " + targetId);
-    }
-
-    // create the child elements and append them
-    _this.hc = CircleSlider._createHandleContainerElem();
-    _this.handle = CircleSlider._createHandleElem();
-    _this.hc.appendChild(_this.handle);
-    _this.root.appendChild(_this.hc);
-
-    // just to keep track of all event names
-    _this.events = {
-      sliderMove: "sliderMove",
-      sliderUp: "sliderUp"
-    };
-
-    // active is true when user is holding down handle
-    _this.active = false;
-    // mouse events
-    _this._addEventListeners("mousedown", "mousemove", "mouseup");
-    // touch events
-    _this._addEventListeners("touchstart", "touchmove", "touchend");
-
-    // bind methods
-    _this._mouseMoveHandler = _this._mouseMoveHandler.bind(_this);
-    return _this;
-  }
-
-  // public methods
-
-  /**
-   * Use this function to call a callback function to react to
-   * synthetic events from this class.
-   *
-   * @param {String} name       The name of the event to listen to
-   * @param {Function} callback The callback function for the event
-   * @memberof CircleSlider
-   */
-  /* on(name, callback) {
-    const eventName = `${this.root.id}-${name}`;
-    this.root.addEventListener(eventName, callback);
-  } */
-
-  /**
-   * Returns the angle/value of the slider.
-   *
-   * @returns The current value
-   * @memberof CircleSlider
-   */
-
-
-  _createClass(CircleSlider, [{
-    key: "getAngle",
-    value: function getAngle() {
-      return this.outputAngle;
-    }
-
-    /**
-     * Manually sets the angle/value of the slider.
-     *
-     * @param {Number} angle  The new value for the slider
-     * @memberof CircleSlider
-     */
-
-  }, {
-    key: "setAngle",
-    value: function setAngle(angle) {
-      var rawAngle = 360 - angle;
-      this._moveHandle(rawAngle);
-    }
-
-    // "private" methods
-
-  }, {
-    key: "_fireEvent",
-    value: function _fireEvent(name, data) {
-      // const eventName = `${this.root.id}-${name}`;
-      // const event = new CustomEvent(eventName, { detail: data });
-      // this.root.dispatchEvent(event);
-      this.emit(name, data);
-    }
-  }, {
-    key: "_addEventListeners",
-    value: function _addEventListeners(startEvent, moveEvent, endEvent) {
-      var _this2 = this;
-
-      // user presses handle
-      this.handle.addEventListener(startEvent, function (e) {
-        // prevent text selection
-        e.preventDefault();
-
-        if (!_this2.active) {
-          _this2.active = true;
-
-          // user moves handle
-          document.addEventListener(moveEvent, _this2._mouseMoveHandler, false);
-
-          // user lets go
-          document.addEventListener(endEvent, function () {
-            _this2.active = false;
-            document.removeEventListener(moveEvent, _this2._mouseMoveHandler, false);
-            _this2._fireEvent(_this2.events.sliderUp, _this2.outputAngle);
-          });
-        }
-      });
-    }
-  }, {
-    key: "_mouseMoveHandler",
-    value: function _mouseMoveHandler(e) {
-      e.preventDefault();
-      this._moveHandle(this._getRawAngle(e));
-    }
-  }, {
-    key: "_moveHandle",
-    value: function _moveHandle(rawAngle) {
-      var angle = rawAngle;
-      // snap handle to multiples of snapMultiplier
-      if (this.snapMultiplier) {
-        var sm = this.snapMultiplier;
-        var delta = Math.abs(angle - Math.round(angle / sm) * sm);
-        if (delta <= 5) {
-          angle = Math.round(angle / sm) * sm;
-        }
-      }
-
-      // move the handle visually
-      this.hc.style.cssText = "transform: rotate(" + angle + "deg);";
-
-      // format angle that gets exposed
-      var outputAngle = 360 - Math.round(angle);
-      if (outputAngle === 360) {
-        outputAngle = 0;
-      }
-      this.outputAngle = outputAngle;
-
-      this._fireEvent(this.events.sliderMove, this.outputAngle);
-    }
-  }, {
-    key: "_getRawAngle",
-    value: function _getRawAngle(e) {
-      var pivot = CircleSlider._getCenter(this.root);
-      var mouse = {
-        x: e.pageX,
-        y: e.pageY
-      };
-      var offset = -90;
-      var angle = CircleSlider._radToDeg(Math.atan2(mouse.x - pivot.x, -(mouse.y - pivot.y))) + offset;
-      if (angle < 0) angle += 360;
-      return angle;
-    }
-  }], [{
-    key: "_getCenter",
-    value: function _getCenter(elem) {
-      var rect = elem.getBoundingClientRect();
-      return {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
-      };
-    }
-  }, {
-    key: "_radToDeg",
-    value: function _radToDeg(rad) {
-      return rad * (180 / Math.PI);
-    }
-
-    // Uninteresting methods
-
-  }, {
-    key: "_createHandleContainerElem",
-    value: function _createHandleContainerElem() {
-      var hc = document.createElement("div");
-      hc.className = "cs-handle-container";
-      return hc;
-    }
-  }, {
-    key: "_createHandleElem",
-    value: function _createHandleElem() {
-      var h = document.createElement("div");
-      h.className = "cs-handle";
-      return h;
-    }
-  }]);
-
-  return CircleSlider;
-}(EventEmitter);
-
-module.exports = CircleSlider;
-
-},{"events":2}]},{},[1]);
+},{}]},{},[1]);
