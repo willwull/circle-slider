@@ -65,6 +65,10 @@ cs.on("sliderUp", (angle) => {
 })
 ```
 
+Since `CircleSlider` extends `EventEmitter` from the node `events` module, you can also use functions like `once` instead of `on`.
+
+Further reading [here](https://nodejs.org/api/events.html#events_class_eventemitter).
+
 ## Styling
 I leave most styling up to you! Here are some good defaults to get started with:
 
