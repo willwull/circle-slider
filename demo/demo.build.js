@@ -3,7 +3,7 @@
 
 var CircleSlider = require("../lib/index.js");
 
-var cs = new CircleSlider("#slder", 45);
+var cs = new CircleSlider("#slider", 45);
 var targetDiv = document.getElementById("angle");
 
 cs.on("sliderMove", function (angle) {
@@ -61,6 +61,7 @@ var CircleSlider = function (_EventEmitter) {
   function CircleSlider(targetId, snapMultiplier) {
     _classCallCheck(this, CircleSlider);
 
+    // allow both "id" or "#id"
     var _this = _possibleConstructorReturn(this, (CircleSlider.__proto__ || Object.getPrototypeOf(CircleSlider)).call(this));
 
     _this.root = document.getElementById(targetId) || document.getElementById(targetId.slice(1));
