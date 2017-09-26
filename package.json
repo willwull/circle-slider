@@ -19,6 +19,17 @@
     "url": "https://github.com/willwull/circle-slider/issues"
   },
   "homepage": "https://github.com/willwull/circle-slider#readme",
+  "keywords": [
+    "circle",
+    "circular",
+    "round",
+    "slider",
+    "drag",
+    "draggable",
+    "slider",
+    "angle",
+    "selector"
+  ],
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
