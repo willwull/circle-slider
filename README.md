@@ -41,6 +41,12 @@ You can make the handle snap to multiples of some number, e.g. snap to every mul
 new CircleSlider("id", 45);
 ```
 
+You can also write the first parameter with a #:
+``` js
+new CircleSlider("#id");
+```
+Both work the same, so choose which one you prefer.
+
 ## Methods
 Here is the stuff you can do with CircleSlider:
 
