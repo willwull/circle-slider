@@ -9,7 +9,8 @@ class CircleSlider extends EventEmitter {
    */
   constructor(targetId, snapMultiplier) {
     super();
-    this.root = document.getElementById(targetId);
+    // allow both "id" or "#id"
+    this.root = document.getElementById(targetId) || document.getElementById(targetId.slice(1));
     this.outputAngle = 0;
     this.snapMultiplier = snapMultiplier;
 

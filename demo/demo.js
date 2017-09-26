@@ -1,6 +1,6 @@
 const CircleSlider = require("../lib/index.js");
 
-const cs = new CircleSlider("slider", 45);
+const cs = new CircleSlider("#slder", 45);
 const targetDiv = document.getElementById("angle");
 
 cs.on("sliderMove", (angle) => {

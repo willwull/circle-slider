@@ -3,7 +3,7 @@
 
 var CircleSlider = require("../lib/index.js");
 
-var cs = new CircleSlider("slider", 45);
+var cs = new CircleSlider("#slder", 45);
 var targetDiv = document.getElementById("angle");
 
 cs.on("sliderMove", function (angle) {
@@ -63,7 +63,7 @@ var CircleSlider = function (_EventEmitter) {
 
     var _this = _possibleConstructorReturn(this, (CircleSlider.__proto__ || Object.getPrototypeOf(CircleSlider)).call(this));
 
-    _this.root = document.getElementById(targetId);
+    _this.root = document.getElementById(targetId) || document.getElementById(targetId.slice(1));
     _this.outputAngle = 0;
     _this.snapMultiplier = snapMultiplier;
 

@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "http": "http-server",
     "build": "babel src -d lib",
+    "predemo": "npm run build",
     "demo": "browserify demo/demo.js -t babelify -o demo/demo.build.js"
   },
   "repository": {
