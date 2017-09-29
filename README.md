@@ -76,11 +76,15 @@ Since `CircleSlider` extends `EventEmitter` from the node `events` module, you c
 Further reading [here](https://nodejs.org/api/events.html#events_class_eventemitter).
 
 ## Styling
-I leave most styling up to you! Here are some good defaults to get started with:
+I leave most styling up to you! However, there are some CSS rules that you must use in order for the handle two rotate properly and stuff. Here are some good defaults to get started with:
 
 ``` css
 #slider {
-  /* These two are pretty important */
+  /*
+    position: relative is needed for the handle to be
+    positioned correctly, and border-radius: 100% just
+    makes the div round.
+  */
   position: relative;
   border-radius: 100%;
 
@@ -90,8 +94,12 @@ I leave most styling up to you! Here are some good defaults to get started with:
   background: linear-gradient(90deg, #FF9A9E, #FAD0C4);
 }
 
-#slider .cs-handle-container {
-  /* probably best to paste this exactly as is */
+/*
+  Probably best to paste this exactly as is.
+  These CSS rules make sure that the handle rotates
+  properly, so don't change anything here.
+*/
+.cs-handle-container {
   position: absolute;
   left: 0;
   right: 0;
@@ -100,14 +108,23 @@ I leave most styling up to you! Here are some good defaults to get started with:
   margin-top: -1px;
 }
 
-#slider .cs-handle {
-  /* This is the handle itself, you're free to do anything here */
-  cursor: default;
+/* Also paste as is */
+.cs-handle {
   position: absolute;
-  right: -15px;
   transform: translateY(-50%);
+}
+
+/* the appearance of the handle, feel free to change! */
+#slider .cs-handle {
   height: 30px;
   width: 30px;
+  /*
+    Change 'right' to change the offset from the edge.
+    E.g right: 0 puts the handle just next to the edge
+    of #slider, on the inside
+  */
+  right: -15px;
+  cursor: default;
   border-radius: 100%;
   background: linear-gradient(180deg, #FFFFFF, #efefef);
   box-shadow: rgba(0, 0, 0, 0.3) 0 1px 10px 0;
