@@ -1,2 +1,4 @@
-# source files
-src/
+demo/
+.babelrc
+.eslintignore
+.eslintrc.js
