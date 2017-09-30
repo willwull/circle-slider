@@ -75,7 +75,7 @@ cs.on("sliderUp", (angle) => {
 
 Since `CircleSlider` extends `eventemitter3`, you can also use functions like `once` instead of `on`.
 
-Further reading [here](https://nodejs.org/api/events.html#events_class_eventemitter) (`eventemitter3` uses the same API as node `events`.
+Further reading [here](https://nodejs.org/api/events.html#events_class_eventemitter) (`eventemitter3` uses the same API as node `events`).
 
 ## Styling
 I leave most styling up to you! However, there are some CSS rules that you must use in order for the handle two rotate properly and stuff. Here are some good defaults to get started with:
