@@ -31,7 +31,9 @@ const cs = new CircleSlider("whatever");
 
 All you have to do on the HTML side is to create a div with some id, which is the first parameter in the constructor of CircleSlider.
 
-The div doesn't *have* to be empty, but you don't *need* to add anything for it to work; the handle will be created automatically for you.
+All you need is to create a div, the elements for the handle (and its container) will be created for you.
+
+You can put anything you want inside the div, e.g. a div which displays the current angle (see the demo).
 
 Remember to use Browserify/Webpack/whatever to handle the import.
 
@@ -71,9 +73,9 @@ cs.on("sliderUp", (angle) => {
 })
 ```
 
-Since `CircleSlider` extends `EventEmitter` from the node `events` module, you can also use functions like `once` instead of `on`.
+Since `CircleSlider` extends `eventemitter3`, you can also use functions like `once` instead of `on`.
 
-Further reading [here](https://nodejs.org/api/events.html#events_class_eventemitter).
+Further reading [here](https://nodejs.org/api/events.html#events_class_eventemitter) (`eventemitter3` uses the same API as node `events`.
 
 ## Styling
 I leave most styling up to you! However, there are some CSS rules that you must use in order for the handle two rotate properly and stuff. Here are some good defaults to get started with:
