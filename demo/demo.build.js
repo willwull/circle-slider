@@ -3,7 +3,10 @@
 
 var CircleSlider = require("../lib/index.js");
 
-var cs = new CircleSlider("#slider", 45);
+var options = {
+  snap: 90
+};
+var cs = new CircleSlider("#slider", options);
 var targetDiv = document.getElementById("angle");
 
 cs.on("sliderMove", function (angle) {
@@ -58,7 +61,7 @@ var CircleSlider = function (_EventEmitter) {
    * @param {Number} [snapMultiplier] Makes the handle snap to every multiple of this number.
    * @memberof CircleSlider
    */
-  function CircleSlider(targetId, snapMultiplier) {
+  function CircleSlider(targetId, options) {
     _classCallCheck(this, CircleSlider);
 
     // allow both "id" or "#id"
@@ -66,7 +69,7 @@ var CircleSlider = function (_EventEmitter) {
 
     _this.root = document.getElementById(targetId) || document.getElementById(targetId.slice(1));
     _this.outputAngle = 0;
-    _this.snapMultiplier = snapMultiplier;
+    _this.snapMultiplier = options.snap;
 
     // validation
     if (!_this.root) {

@@ -4,15 +4,16 @@ class CircleSlider extends EventEmitter {
   /**
    * Creates an instance of CircleSlider inside the element with the id `targetId`
    * @param {String} targetId         The id of the element to contain the circle slider.
-   * @param {Number} [snapMultiplier] Makes the handle snap to every multiple of this number.
+   * @param {Object} [options]        An object containing options for the slider.
+   * @param {Number} [options.snap]   Makes the handle snap to every multiple of this number.
    * @memberof CircleSlider
    */
-  constructor(targetId, snapMultiplier) {
+  constructor(targetId, options) {
     super();
     // allow both "id" or "#id"
     this.root = document.getElementById(targetId) || document.getElementById(targetId.slice(1));
     this.outputAngle = 0;
-    this.snapMultiplier = snapMultiplier;
+    this.snapMultiplier = options.snap;
 
     // validation
     if (!this.root) {

@@ -1,6 +1,9 @@
 const CircleSlider = require("../lib/index.js");
 
-const cs = new CircleSlider("#slider", 45);
+const options = {
+  snap: 90,
+};
+const cs = new CircleSlider("#slider", options);
 const targetDiv = document.getElementById("angle");
 
 cs.on("sliderMove", (angle) => {
