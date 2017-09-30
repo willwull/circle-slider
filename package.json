@@ -42,6 +42,6 @@
     "http-server": "^0.10.0"
   },
   "dependencies": {
-    "events": "^1.1.1"
+    "eventemitter3": "^2.0.3"
   }
 }
