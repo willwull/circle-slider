@@ -16,8 +16,7 @@ class CircleSlider extends EventEmitter {
     // allow both "id" or "#id"
     this.root = document.getElementById(targetId) || document.getElementById(targetId.slice(1));
     this.outputAngle = 0;
-    this.direction = options.dir;
-    this.clockwise = options.clockwise;
+    this.clockwise = options.clockwise; // affects _formatOutputAngle
     this.snapMultiplier = options.snap;
 
     // validation
@@ -67,7 +66,7 @@ class CircleSlider extends EventEmitter {
    * @memberof CircleSlider
    */
   setAngle(angle) {
-    const rawAngle = CircleSlider._formatOutputAngle(angle);
+    const rawAngle = this._formatOutputAngle(angle);
     this._moveHandle(rawAngle);
   }
 
@@ -114,15 +113,16 @@ class CircleSlider extends EventEmitter {
     // move the handle visually
     this.hc.style.cssText = `transform: rotate(${angle}deg);`;
 
-    this.outputAngle = CircleSlider._formatOutputAngle(angle);
+    this.outputAngle = this._formatOutputAngle(angle);
 
     this.emit(this.events.sliderMove, this.outputAngle);
   }
 
-  static _formatOutputAngle(angle) {
-    const outputAngle = this.clockwise ?
+  _formatOutputAngle(angle) {
+    const outputAngle = this.clockwise === true ?
       (360 - Math.round(angle)) % 360 :
       (360 + Math.round(angle)) % 360;
+    console.log(this.clockwise);
     return outputAngle;
   }
 
