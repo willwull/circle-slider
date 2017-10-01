@@ -4,7 +4,7 @@
 var CircleSlider = require("../lib/index.js");
 
 var options = {
-  snap: 0,
+  snap: 45,
   clockwise: true
 };
 var cs = new CircleSlider("#slider", options);
@@ -139,7 +139,7 @@ var CircleSlider = function (_EventEmitter) {
   }, {
     key: "setAngle",
     value: function setAngle(angle) {
-      var rawAngle = (360 - angle) % 360;
+      var rawAngle = CircleSlider._formatOutputAngle(angle);
       this._moveHandle(rawAngle);
     }
 
@@ -212,7 +212,7 @@ var CircleSlider = function (_EventEmitter) {
   }], [{
     key: "_formatOutputAngle",
     value: function _formatOutputAngle(angle) {
-      var outputAngle = (360 - Math.round(angle)) % 360;
+      var outputAngle = this.clockwise ? (360 - Math.round(angle)) % 360 : (360 + Math.round(angle)) % 360;
       return outputAngle;
     }
   }, {

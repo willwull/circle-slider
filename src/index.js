@@ -67,7 +67,7 @@ class CircleSlider extends EventEmitter {
    * @memberof CircleSlider
    */
   setAngle(angle) {
-    const rawAngle = (360 - angle) % 360;
+    const rawAngle = CircleSlider._formatOutputAngle(angle);
     this._moveHandle(rawAngle);
   }
 
@@ -120,7 +120,9 @@ class CircleSlider extends EventEmitter {
   }
 
   static _formatOutputAngle(angle) {
-    const outputAngle = (360 - Math.round(angle)) % 360;
+    const outputAngle = this.clockwise ?
+      (360 - Math.round(angle)) % 360 :
+      (360 + Math.round(angle)) % 360;
     return outputAngle;
   }
 
