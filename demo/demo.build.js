@@ -4,7 +4,7 @@
 var CircleSlider = require("../lib/index.js");
 
 var options = {
-  snap: 90,
+  snap: 0,
   clockwise: true
 };
 var cs = new CircleSlider("#slider", options);
@@ -16,6 +16,13 @@ cs.on("sliderMove", function (angle) {
 
 cs.on("sliderUp", function (angle) {
   console.log("sliderUp " + angle);
+});
+
+var btn = document.getElementById("slider-set-angle");
+btn.addEventListener("click", function (e) {
+  e.preventDefault();
+  var val = document.getElementById("slider-form-value").value;
+  cs.setAngle(val);
 });
 
 },{"../lib/index.js":2}],2:[function(require,module,exports){
@@ -132,7 +139,7 @@ var CircleSlider = function (_EventEmitter) {
   }, {
     key: "setAngle",
     value: function setAngle(angle) {
-      var rawAngle = 360 - angle;
+      var rawAngle = (360 - angle) % 360;
       this._moveHandle(rawAngle);
     }
 
@@ -205,10 +212,7 @@ var CircleSlider = function (_EventEmitter) {
   }], [{
     key: "_formatOutputAngle",
     value: function _formatOutputAngle(angle) {
-      var outputAngle = 360 - Math.round(angle);
-      if (outputAngle === 360) {
-        outputAngle = 0;
-      }
+      var outputAngle = (360 - Math.round(angle)) % 360;
       return outputAngle;
     }
   }, {

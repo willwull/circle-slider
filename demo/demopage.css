@@ -17,7 +17,7 @@ html, body {
 }
 
 h1 {
-  margin-top: 70px; 
+  margin-top: 70px;
   text-align: center;
   font-family: 'Crete Round', serif;
   font-size: 64px;
@@ -47,6 +47,12 @@ h1 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+#slider-form {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 16px;
 }
 
 @keyframes fade-spin {

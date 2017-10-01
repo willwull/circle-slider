@@ -1,7 +1,7 @@
 const CircleSlider = require("../lib/index.js");
 
 const options = {
-  snap: 90,
+  snap: 0,
   clockwise: true,
 };
 const cs = new CircleSlider("#slider", options);
@@ -13,4 +13,11 @@ cs.on("sliderMove", (angle) => {
 
 cs.on("sliderUp", (angle) => {
   console.log(`sliderUp ${angle}`);
+});
+
+const btn = document.getElementById("slider-set-angle");
+btn.addEventListener("click", (e) => {
+  e.preventDefault();
+  const val = document.getElementById("slider-form-value").value;
+  cs.setAngle(val);
 });
