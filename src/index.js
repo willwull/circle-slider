@@ -3,9 +3,12 @@ const EventEmitter = require("eventemitter3");
 class CircleSlider extends EventEmitter {
   /**
    * Creates an instance of CircleSlider inside the element with the id `targetId`
-   * @param {String} targetId         The id of the element to contain the circle slider.
-   * @param {Object} [options]        An object containing options for the slider.
-   * @param {Number} [options.snap]   Makes the handle snap to every multiple of this number.
+   * @param {String} targetId              The id of the element to contain the circle slider.
+   * @param {Object} [options]             An object containing options for the slider.
+   * @param {Number} [options.snap]        Makes the handle snap to every multiple of this number.
+   * @param {Boolean} [options.clockwise]  True to make clockwise the positive direction.
+   * @param {"top"|"bottom"|"left"|"right"} [options.startPos]
+   *    Which side the handle should start at.
    * @memberof CircleSlider
    */
   constructor(targetId, options) {
@@ -13,6 +16,8 @@ class CircleSlider extends EventEmitter {
     // allow both "id" or "#id"
     this.root = document.getElementById(targetId) || document.getElementById(targetId.slice(1));
     this.outputAngle = 0;
+    this.direction = options.dir;
+    this.clockwise = options.clockwise;
     this.snapMultiplier = options.snap;
 
     // validation
@@ -109,14 +114,17 @@ class CircleSlider extends EventEmitter {
     // move the handle visually
     this.hc.style.cssText = `transform: rotate(${angle}deg);`;
 
-    // format angle that gets exposed
+    this.outputAngle = CircleSlider._formatOutputAngle(angle);
+
+    this.emit(this.events.sliderMove, this.outputAngle);
+  }
+
+  static _formatOutputAngle(angle) {
     let outputAngle = 360 - Math.round(angle);
     if (outputAngle === 360) {
       outputAngle = 0;
     }
-    this.outputAngle = outputAngle;
-
-    this.emit(this.events.sliderMove, this.outputAngle);
+    return outputAngle;
   }
 
   _getRawAngle(e) {

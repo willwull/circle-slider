@@ -4,7 +4,8 @@
 var CircleSlider = require("../lib/index.js");
 
 var options = {
-  snap: 90
+  snap: 90,
+  clockwise: true
 };
 var cs = new CircleSlider("#slider", options);
 var targetDiv = document.getElementById("angle");
@@ -57,8 +58,12 @@ var CircleSlider = function (_EventEmitter) {
 
   /**
    * Creates an instance of CircleSlider inside the element with the id `targetId`
-   * @param {String} targetId         The id of the element to contain the circle slider.
-   * @param {Number} [snapMultiplier] Makes the handle snap to every multiple of this number.
+   * @param {String} targetId              The id of the element to contain the circle slider.
+   * @param {Object} [options]             An object containing options for the slider.
+   * @param {Number} [options.snap]        Makes the handle snap to every multiple of this number.
+   * @param {Boolean} [options.clockwise]  True to make clockwise the positive direction.
+   * @param {"top"|"bottom"|"left"|"right"} [options.startPos]
+   *    Which side the handle should start at.
    * @memberof CircleSlider
    */
   function CircleSlider(targetId, options) {
@@ -69,6 +74,8 @@ var CircleSlider = function (_EventEmitter) {
 
     _this.root = document.getElementById(targetId) || document.getElementById(targetId.slice(1));
     _this.outputAngle = 0;
+    _this.direction = options.dir;
+    _this.clockwise = options.clockwise;
     _this.snapMultiplier = options.snap;
 
     // validation
@@ -178,12 +185,7 @@ var CircleSlider = function (_EventEmitter) {
       // move the handle visually
       this.hc.style.cssText = "transform: rotate(" + angle + "deg);";
 
-      // format angle that gets exposed
-      var outputAngle = 360 - Math.round(angle);
-      if (outputAngle === 360) {
-        outputAngle = 0;
-      }
-      this.outputAngle = outputAngle;
+      this.outputAngle = CircleSlider._formatOutputAngle(angle);
 
       this.emit(this.events.sliderMove, this.outputAngle);
     }
@@ -201,6 +203,15 @@ var CircleSlider = function (_EventEmitter) {
       return angle;
     }
   }], [{
+    key: "_formatOutputAngle",
+    value: function _formatOutputAngle(angle) {
+      var outputAngle = 360 - Math.round(angle);
+      if (outputAngle === 360) {
+        outputAngle = 0;
+      }
+      return outputAngle;
+    }
+  }, {
     key: "_getCenter",
     value: function _getCenter(elem) {
       var rect = elem.getBoundingClientRect();
