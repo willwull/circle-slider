@@ -73,6 +73,8 @@ cs.on("sliderUp", (angle) => {
 })
 ```
 
+Note that the `sliderMove` event gets triggered when using `setAngle`.
+
 Since `CircleSlider` extends `eventemitter3`, you can also use functions like `once` instead of `on`.
 
 Further reading [here](https://nodejs.org/api/events.html#events_class_eventemitter) (`eventemitter3` uses the same API as node `events`).
