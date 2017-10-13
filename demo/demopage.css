@@ -33,11 +33,11 @@ h1 {
   height: var(--slider-size);
   width: var(--slider-size);
   margin: 0 auto;
-  animation: fade-spin 1.5s 1 forwards;
+  /* animation: fade-spin 1.5s 1 forwards; */
 }
 
 #slider .cs-handle-container {
-  animation: spin 1.5s 1;
+  /* animation: spin 1.5s 1; */
 }
 
 #angle {

@@ -18,6 +18,25 @@ class CircleSlider extends EventEmitter {
     this.outputAngle = 0;
     this.clockwise = options.clockwise; // affects _formatOutputAngle
     this.snapMultiplier = options.snap;
+    this.startOffset = 0; // "right" is default
+    this.dragOffset = 0;
+    console.log(options);
+    switch (options.startPos) {
+      case "top":
+        this.startOffset = -90;
+        this.dragOffset = -90;
+        break;
+      case "left":
+        this.startOffset = -180;
+        this.dragOffset = -90;
+        break;
+      case "bottom":
+        this.startOffset = -270;
+        this.dragOffset = -90;
+        break;
+      default:
+        break;
+    }
 
     // validation
     if (!this.root) {
@@ -29,6 +48,9 @@ class CircleSlider extends EventEmitter {
     this.handle = CircleSlider._createHandleElem();
     this.hc.appendChild(this.handle);
     this.root.appendChild(this.hc);
+
+    // put the handle at the correct position
+    this.hc.style.cssText = `transform: rotate(${this.startOffset}deg);`;
 
     // just to keep track of all event names
     this.events = {
@@ -120,9 +142,8 @@ class CircleSlider extends EventEmitter {
 
   _formatOutputAngle(angle) {
     const outputAngle = this.clockwise === true ?
-      (360 - Math.round(angle)) % 360 :
-      (360 + Math.round(angle)) % 360;
-    console.log(this.clockwise);
+      ((360 - Math.round(angle)) + this.startOffset) % 360 :
+      ((360 + Math.round(angle)) + this.startOffset) % 360;
     return outputAngle;
   }
 
@@ -132,10 +153,9 @@ class CircleSlider extends EventEmitter {
       x: e.pageX,
       y: e.pageY,
     };
-    const offset = -90;
-    let angle = CircleSlider._radToDeg(Math.atan2(mouse.x - pivot.x, -(mouse.y - pivot.y)))
-     + offset;
-    if (angle < 0) angle += 360;
+
+    const angle = (CircleSlider._radToDeg(Math.atan2(mouse.x - pivot.x, -(mouse.y - pivot.y)))
+      + this.dragOffset) % 360;
     return angle;
   }
 

@@ -5,7 +5,8 @@ var CircleSlider = require("../lib/index.js");
 
 var options = {
   snap: 45,
-  clockwise: true
+  clockwise: false,
+  startPos: "bottom"
 };
 var cs = new CircleSlider("#slider", options);
 var targetDiv = document.getElementById("angle");
@@ -81,9 +82,27 @@ var CircleSlider = function (_EventEmitter) {
 
     _this.root = document.getElementById(targetId) || document.getElementById(targetId.slice(1));
     _this.outputAngle = 0;
-    _this.direction = options.dir;
-    _this.clockwise = options.clockwise;
+    _this.clockwise = options.clockwise; // affects _formatOutputAngle
     _this.snapMultiplier = options.snap;
+    _this.startOffset = 0; // "right" is default
+    _this.dragOffset = 0;
+    console.log(options);
+    switch (options.startPos) {
+      case "top":
+        _this.startOffset = -90;
+        _this.dragOffset = -90;
+        break;
+      case "left":
+        _this.startOffset = -180;
+        _this.dragOffset = -90;
+        break;
+      case "bottom":
+        _this.startOffset = -270;
+        _this.dragOffset = -90;
+        break;
+      default:
+        break;
+    }
 
     // validation
     if (!_this.root) {
@@ -95,6 +114,9 @@ var CircleSlider = function (_EventEmitter) {
     _this.handle = CircleSlider._createHandleElem();
     _this.hc.appendChild(_this.handle);
     _this.root.appendChild(_this.hc);
+
+    // put the handle at the correct position
+    _this.hc.style.cssText = "transform: rotate(" + _this.startOffset + "deg);";
 
     // just to keep track of all event names
     _this.events = {
@@ -139,7 +161,7 @@ var CircleSlider = function (_EventEmitter) {
   }, {
     key: "setAngle",
     value: function setAngle(angle) {
-      var rawAngle = CircleSlider._formatOutputAngle(angle);
+      var rawAngle = this._formatOutputAngle(angle);
       this._moveHandle(rawAngle);
     }
 
@@ -192,9 +214,15 @@ var CircleSlider = function (_EventEmitter) {
       // move the handle visually
       this.hc.style.cssText = "transform: rotate(" + angle + "deg);";
 
-      this.outputAngle = CircleSlider._formatOutputAngle(angle);
+      this.outputAngle = this._formatOutputAngle(angle);
 
       this.emit(this.events.sliderMove, this.outputAngle);
+    }
+  }, {
+    key: "_formatOutputAngle",
+    value: function _formatOutputAngle(angle) {
+      var outputAngle = this.clockwise === true ? (360 - Math.round(angle) + this.startOffset) % 360 : (360 + Math.round(angle) + this.startOffset) % 360;
+      return outputAngle;
     }
   }, {
     key: "_getRawAngle",
@@ -204,18 +232,11 @@ var CircleSlider = function (_EventEmitter) {
         x: e.pageX,
         y: e.pageY
       };
-      var offset = -90;
-      var angle = CircleSlider._radToDeg(Math.atan2(mouse.x - pivot.x, -(mouse.y - pivot.y))) + offset;
-      if (angle < 0) angle += 360;
+
+      var angle = (CircleSlider._radToDeg(Math.atan2(mouse.x - pivot.x, -(mouse.y - pivot.y))) + this.dragOffset) % 360;
       return angle;
     }
   }], [{
-    key: "_formatOutputAngle",
-    value: function _formatOutputAngle(angle) {
-      var outputAngle = this.clockwise ? (360 - Math.round(angle)) % 360 : (360 + Math.round(angle)) % 360;
-      return outputAngle;
-    }
-  }, {
     key: "_getCenter",
     value: function _getCenter(elem) {
       var rect = elem.getBoundingClientRect();
