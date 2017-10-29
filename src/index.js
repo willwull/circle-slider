@@ -103,10 +103,14 @@ class CircleSlider extends EventEmitter {
         document.addEventListener(moveEvent, this._mouseMoveHandler, false);
 
         // user lets go
-        document.addEventListener(endEvent, () => {
-          this.active = false;
-          document.removeEventListener(moveEvent, this._mouseMoveHandler, false);
-          this.emit(this.events.sliderUp, this.outputAngle);
+        const _this = this;
+        document.addEventListener(endEvent, function endFunc(ev) {
+          _this.active = false;
+          document.removeEventListener(moveEvent, _this._mouseMoveHandler, false);
+          _this.emit(_this.events.sliderUp, _this.outputAngle);
+
+          // remove event listener after this has been fired once
+          ev.currentTarget.removeEventListener(endEvent, endFunc, false);
         });
       }
     });
