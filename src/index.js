@@ -138,8 +138,8 @@ class CircleSlider extends EventEmitter {
 
   _formatOutputAngle(angle) {
     const outputAngle = this.clockwise === true ?
-      ((360 - Math.round(angle)) + this.startOffset) % 360 :
-      ((360 + Math.round(angle)) + this.startOffset) % 360;
+      CircleSlider.modulo(((360 + Math.round(angle)) - this.startOffset), 360) :
+      CircleSlider.modulo(((360 - Math.round(angle)) + this.startOffset), 360);
     return outputAngle;
   }
 
@@ -165,6 +165,11 @@ class CircleSlider extends EventEmitter {
 
   static _radToDeg(rad) {
     return rad * (180 / Math.PI);
+  }
+
+  // % can return negative numbers
+  static modulo(n, m) {
+    return ((n % m) + m) % m;
   }
 
   // Uninteresting methods
