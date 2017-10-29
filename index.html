@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>willwull/circle-slider</title>
   <link href="https://fonts.googleapis.com/css?family=Crete+Round|Lato" rel="stylesheet">
-  <link rel="stylesheet" href="demo/demopage.css"> <!-- demo specific CSS -->
+  <link rel="stylesheet" href="src/demopage.css"> <!-- demo specific CSS -->
   <link rel="stylesheet" href="default.css">
 </head>
 <body>
@@ -14,7 +14,11 @@
     <div id="slider">
       <div id="angle">0&deg;</div>
     </div>
+    <form id="slider-form">
+      <input type="number" id="slider-form-value">
+      <button type="submit" id="slider-set-angle">Set angle</button>
+    </form>
   </div>
-  <script src="demo/demo.build.js"></script>
+  <script src="src/demo.build.js"></script>
 </body>
 </html>

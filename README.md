@@ -35,19 +35,38 @@ All you need is to create a div, the elements for the handle (and its container)
 
 You can put anything you want inside the div, e.g. a div which displays the current angle (see the demo).
 
-Remember to use Browserify/Webpack/whatever to handle the import.
-
 ### Options
-You can make the handle snap to multiples of some number, e.g. snap to every multiple of 45 by passing 45 as the optional second parameter.
+The constructor takes an optional second parameter which looks like this:
 ``` js
-new CircleSlider("id", 45);
+{
+  // e.g. snap to every 45 degrees
+  snap: Number,
+
+  // positive direction
+  clockwise: Boolean,
+
+  // which position 0 degrees is
+  startPos: "top"|"bottom"|"left"|"right",
+}
+```
+I'll emphasize that `startPos` changes where 0 degrees is, so if you instead want, for example, 0 to be at the top, but want the slider to start at 90 degrees, you should call `setAngle(90)` (see below) after creating the slider.
+
+Example usage:
+
+``` js
+const options = {
+  snap: 45,
+  clockwise: false,
+  startPos: "top",
+};
+const cs = new CircleSlider("id", options);
 ```
 
 You can also write the first parameter with a #:
 ``` js
 new CircleSlider("#id");
 ```
-Both work the same, so choose which one you prefer.
+With or without #, there is no difference in functionality, so choose which one you prefer.
 
 ## Methods
 Here is the stuff you can do with CircleSlider:
@@ -72,6 +91,8 @@ cs.on("sliderUp", (angle) => {
     someDiv.textContent = angle;
 })
 ```
+
+Note that the `sliderMove` event gets triggered when using `setAngle`.
 
 Since `CircleSlider` extends `eventemitter3`, you can also use functions like `once` instead of `on`.
 

@@ -1,14 +1,14 @@
 {
   "name": "circle-slider",
-  "version": "2.2.1",
+  "version": "3.0.0",
   "description": "A slider, except it's round",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "http-server",
-    "build": "babel src -d lib",
-    "predemo": "npm run build",
-    "demo": "browserify demo/demo.js -t babelify -o demo/demo.build.js"
+    "start": "webpack-dev-server --open --inline",
+    "build": "babel src/index.js -o lib/index.js",
+    "demo": "webpack",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -39,7 +39,9 @@
     "eslint": "^4.7.1",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0",
-    "http-server": "^0.10.0"
+    "http-server": "^0.10.0",
+    "webpack": "^3.7.1",
+    "webpack-dev-server": "^2.9.1"
   },
   "dependencies": {
     "eventemitter3": "^2.0.3"

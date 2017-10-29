@@ -1,6 +1,6 @@
-lib/
-demo/
+src/
 index.html
 .babelrc
 .eslintignore
 .eslintrc.js
+webpack.config.js

@@ -3,16 +3,36 @@ const EventEmitter = require("eventemitter3");
 class CircleSlider extends EventEmitter {
   /**
    * Creates an instance of CircleSlider inside the element with the id `targetId`
-   * @param {String} targetId         The id of the element to contain the circle slider.
-   * @param {Number} [snapMultiplier] Makes the handle snap to every multiple of this number.
+   * @param {String} targetId              The id of the element to contain the circle slider.
+   * @param {Object} [options]             An object containing options for the slider.
+   * @param {Number} [options.snap]        Makes the handle snap to every multiple of this number.
+   * @param {Boolean} [options.clockwise]  True to make clockwise the positive direction.
+   * @param {"top"|"bottom"|"left"|"right"} [options.startPos]
+   *    Which side the handle should start at.
    * @memberof CircleSlider
    */
-  constructor(targetId, snapMultiplier) {
+  constructor(targetId, options) {
     super();
     // allow both "id" or "#id"
     this.root = document.getElementById(targetId) || document.getElementById(targetId.slice(1));
     this.outputAngle = 0;
-    this.snapMultiplier = snapMultiplier;
+    this.clockwise = options.clockwise; // affects _formatOutputAngle
+    this.snapMultiplier = options.snap;
+    this.startOffset = 0; // "right" is default
+    console.log(options);
+    switch (options.startPos) {
+      case "top":
+        this.startOffset = 270;
+        break;
+      case "left":
+        this.startOffset = 180;
+        break;
+      case "bottom":
+        this.startOffset = 90;
+        break;
+      default:
+        break;
+    }
 
     // validation
     if (!this.root) {
@@ -24,6 +44,9 @@ class CircleSlider extends EventEmitter {
     this.handle = CircleSlider._createHandleElem();
     this.hc.appendChild(this.handle);
     this.root.appendChild(this.hc);
+
+    // put the handle at the correct position
+    this.hc.style.cssText = `transform: rotate(${this.startOffset}deg);`;
 
     // just to keep track of all event names
     this.events = {
@@ -61,7 +84,7 @@ class CircleSlider extends EventEmitter {
    * @memberof CircleSlider
    */
   setAngle(angle) {
-    const rawAngle = 360 - angle;
+    const rawAngle = this._formatOutputAngle(angle);
     this._moveHandle(rawAngle);
   }
 
@@ -108,14 +131,16 @@ class CircleSlider extends EventEmitter {
     // move the handle visually
     this.hc.style.cssText = `transform: rotate(${angle}deg);`;
 
-    // format angle that gets exposed
-    let outputAngle = 360 - Math.round(angle);
-    if (outputAngle === 360) {
-      outputAngle = 0;
-    }
-    this.outputAngle = outputAngle;
+    this.outputAngle = this._formatOutputAngle(angle);
 
     this.emit(this.events.sliderMove, this.outputAngle);
+  }
+
+  _formatOutputAngle(angle) {
+    const outputAngle = this.clockwise === true ?
+      CircleSlider.modulo(((360 + Math.round(angle)) - this.startOffset), 360) :
+      CircleSlider.modulo(((360 - Math.round(angle)) + this.startOffset), 360);
+    return outputAngle;
   }
 
   _getRawAngle(e) {
@@ -124,10 +149,9 @@ class CircleSlider extends EventEmitter {
       x: e.pageX,
       y: e.pageY,
     };
-    const offset = -90;
-    let angle = CircleSlider._radToDeg(Math.atan2(mouse.x - pivot.x, -(mouse.y - pivot.y)))
-     + offset;
-    if (angle < 0) angle += 360;
+
+    const angle = (CircleSlider._radToDeg(Math.atan2(mouse.y - pivot.y, mouse.x - pivot.x))
+    ) % 360;
     return angle;
   }
 
@@ -141,6 +165,11 @@ class CircleSlider extends EventEmitter {
 
   static _radToDeg(rad) {
     return rad * (180 / Math.PI);
+  }
+
+  // % can return negative numbers
+  static modulo(n, m) {
+    return ((n % m) + m) % m;
   }
 
   // Uninteresting methods
