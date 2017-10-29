@@ -1,4 +1,4 @@
-const CircleSlider = require("../lib/index.js");
+const CircleSlider = require("./index.js");
 
 const options = {
   snap: 45,
