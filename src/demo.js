@@ -2,8 +2,8 @@ const CircleSlider = require("./index.js");
 
 const options = {
   snap: 45,
-  clockwise: false,
-  startPos: "bottom",
+  clockwise: true,
+  startPos: "right",
 };
 const cs = new CircleSlider("#slider", options);
 const targetDiv = document.getElementById("angle");

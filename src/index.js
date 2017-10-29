@@ -19,20 +19,16 @@ class CircleSlider extends EventEmitter {
     this.clockwise = options.clockwise; // affects _formatOutputAngle
     this.snapMultiplier = options.snap;
     this.startOffset = 0; // "right" is default
-    this.dragOffset = -90;
     console.log(options);
     switch (options.startPos) {
       case "top":
-        this.startOffset = -90;
-        this.dragOffset = -90;
+        this.startOffset = 270;
         break;
       case "left":
-        this.startOffset = -180;
-        this.dragOffset = -90;
+        this.startOffset = 180;
         break;
       case "bottom":
-        this.startOffset = -270;
-        this.dragOffset = -90;
+        this.startOffset = 90;
         break;
       default:
         break;
@@ -154,8 +150,8 @@ class CircleSlider extends EventEmitter {
       y: e.pageY,
     };
 
-    const angle = (CircleSlider._radToDeg(Math.atan2(mouse.x - pivot.x, -(mouse.y - pivot.y)))
-      + this.dragOffset) % 360;
+    const angle = (CircleSlider._radToDeg(Math.atan2(mouse.y - pivot.y, mouse.x - pivot.x))
+    ) % 360;
     return angle;
   }
 
