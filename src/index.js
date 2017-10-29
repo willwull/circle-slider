@@ -19,7 +19,7 @@ class CircleSlider extends EventEmitter {
     this.clockwise = options.clockwise; // affects _formatOutputAngle
     this.snapMultiplier = options.snap;
     this.startOffset = 0; // "right" is default
-    this.dragOffset = 0;
+    this.dragOffset = -90;
     console.log(options);
     switch (options.startPos) {
       case "top":
