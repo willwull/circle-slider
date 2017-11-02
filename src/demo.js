@@ -2,7 +2,7 @@ const CircleSlider = require("./index.js");
 
 const options = {
   snap: 45,
-  clockwise: true,
+  clockwise: false,
   startPos: "right",
 };
 const cs = new CircleSlider("#slider", options);
