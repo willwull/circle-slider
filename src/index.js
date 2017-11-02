@@ -84,8 +84,15 @@ class CircleSlider extends EventEmitter {
    * @memberof CircleSlider
    */
   setAngle(angle) {
-    const rawAngle = this._formatOutputAngle(angle);
+    const rawAngle = this._formatInputAngle(angle);
     this._moveHandle(rawAngle);
+  }
+
+  _formatInputAngle(angle) {
+    const rawAngle = this.clockwise === true ?
+      CircleSlider.modulo((Math.round(angle) - 360 + this.startOffset), 360) :
+      CircleSlider.modulo((360 - Math.round(angle) + this.startOffset), 360);
+    return rawAngle;
   }
 
   // "private" methods
