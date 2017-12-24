@@ -16,11 +16,20 @@ class CircleSlider extends EventEmitter {
     // allow both "id" or "#id"
     this.root = document.getElementById(targetId) || document.getElementById(targetId.slice(1));
     this.outputAngle = 0;
-    this.clockwise = options.clockwise; // affects _formatOutputAngle
-    this.snapMultiplier = options.snap;
+
+    if (options) {
+      this.clockwise = options.clockwise; // affects _formatOutputAngle
+      this.snapMultiplier = options.snap;
+      this.startPos = options.startPos;
+    } else {
+      this.clockwise = false;
+      this.snapMultiplier = 0;
+      this.startPos = "right";
+    }
+
     this.startOffset = 0; // "right" is default
-    console.log(options);
-    switch (options.startPos) {
+
+    switch (this.startPos) {
       case "top":
         this.startOffset = 270;
         break;
