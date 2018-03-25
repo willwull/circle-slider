@@ -165,13 +165,20 @@ class CircleSlider extends EventEmitter {
 
   _getRawAngle(e) {
     const pivot = CircleSlider._getCenter(this.root);
-    const mouse = {
-      x: e.pageX,
-      y: e.pageY,
-    };
+    let mouse;
+    if (e.type == 'touchmove') {
+      mouse = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      };
+    } else {
+      mouse = {
+        x: e.clientX,
+        y: e.clientY,
+      };
+    }
 
-    const angle = (CircleSlider._radToDeg(Math.atan2(mouse.y - pivot.y, mouse.x - pivot.x))
-    ) % 360;
+    const angle = (CircleSlider._radToDeg(Math.atan2(mouse.y - pivot.y, mouse.x - pivot.x))) % 360;
     return angle;
   }
 
