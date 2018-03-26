@@ -1,0 +1,72 @@
+:root {
+  --slider-size: 350px;
+}
+@media (max-width: 576px) {
+  :root {
+    --slider-size: 230px;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'Lato', sans-serif;
+  color: #2E2E2E;
+}
+
+h1 {
+  margin-top: 70px;
+  text-align: center;
+  font-family: 'Crete Round', serif;
+  font-size: 64px;
+  line-height: 0.9;
+}
+
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+#slider {
+  height: var(--slider-size);
+  width: var(--slider-size);
+  margin: 0 auto;
+  /* animation: fade-spin 1.5s 1 forwards; */
+}
+
+#slider .cs-handle-container {
+  /* animation: spin 1.5s 1; */
+}
+
+#angle {
+  color: white;
+  font-size: 52px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#slider-form {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 16px;
+}
+
+@keyframes fade-spin {
+  0% {
+    opacity: 0;
+    transform: rotate(-180deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
