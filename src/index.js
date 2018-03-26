@@ -166,7 +166,7 @@ class CircleSlider extends EventEmitter {
   _getRawAngle(e) {
     const pivot = CircleSlider._getCenter(this.root);
     let mouse;
-    if (e.type == 'touchmove') {
+    if (e.type === "touchmove") {
       mouse = {
         x: e.touches[0].clientX,
         y: e.touches[0].clientY,
