@@ -1,5 +1,7 @@
 const CircleSlider = require("../src/index");
 
+// tests of the static methods of CircleSlider
+
 test("_radToDeg converts correctly", () => {
   // probably overkill to test such a simple method
   const rtd = CircleSlider._radToDeg;
