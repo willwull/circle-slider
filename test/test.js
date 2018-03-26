@@ -10,8 +10,8 @@ test("_radToDeg converts correctly", () => {
   expect(rtd(Math.PI / 2)).toBeCloseTo(90);
 });
 
-test("modulo gives correct values", () => {
-  const mod = CircleSlider.modulo;
+test("_modulo gives correct values", () => {
+  const mod = CircleSlider._modulo;
   expect(mod(0, 360)).toBe(0);
   expect(mod(360, 360)).toBe(0);
   expect(mod(361, 360)).toBe(1);
