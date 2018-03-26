@@ -1,6 +1,6 @@
 {
   "name": "circle-slider",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "A slider, except it's round",
   "main": "lib/index.js",
   "scripts": {
