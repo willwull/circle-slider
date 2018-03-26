@@ -20,3 +20,17 @@ test("_modulo gives correct values", () => {
   expect(mod(359, 360)).toBe(359);
   expect(mod(720, 360)).toBe(0);
 });
+
+test("create handle element", () => {
+  const res = CircleSlider._createHandleElem();
+  expect(res).not.toBeFalsy();
+  expect(res.tagName).toBe("DIV");
+  expect(res.className).toBe("cs-handle");
+});
+
+test("create handle container", () => {
+  const res = CircleSlider._createHandleContainerElem();
+  expect(res).not.toBeFalsy();
+  expect(res.tagName).toBe("DIV");
+  expect(res.className).toBe("cs-handle-container");
+});
