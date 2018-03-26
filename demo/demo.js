@@ -1,4 +1,6 @@
-const CircleSlider = require("./index.js");
+import CircleSlider from "../src/index";
+import "./demopage.css";
+import "../src/default.css";
 
 const options = {
   snap: 45,
