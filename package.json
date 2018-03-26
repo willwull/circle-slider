@@ -7,8 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --open --inline",
     "build": "babel src/index.js -o lib/index.js",
-    "demo": "webpack",
-    "prepublish": "npm run build"
+    "build:demo": "webpack",
+    "prepublish": "npm run build",
+    "deploy": "gh-pages -d demo",
+    "predeploy": "npm run build:demo"
   },
   "repository": {
     "type": "git",
