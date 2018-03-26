@@ -1,5 +1,5 @@
 src/
-index.html
+demo/
 .babelrc
 .eslintignore
 .eslintrc.js
