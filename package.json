@@ -4,7 +4,7 @@
   "description": "A slider, except it's round",
   "main": "lib/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose",
     "start": "webpack-dev-server --open --inline",
     "build": "babel src/index.js -o lib/index.js",
     "build:demo": "webpack",
