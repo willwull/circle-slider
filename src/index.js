@@ -99,8 +99,8 @@ class CircleSlider extends EventEmitter {
 
   _formatInputAngle(angle) {
     const rawAngle = this.clockwise === true ?
-      CircleSlider.modulo((Math.round(angle) - 360 + this.startOffset), 360) :
-      CircleSlider.modulo((360 - Math.round(angle) + this.startOffset), 360);
+      CircleSlider._modulo((Math.round(angle) - 360 + this.startOffset), 360) :
+      CircleSlider._modulo((360 - Math.round(angle) + this.startOffset), 360);
     return rawAngle;
   }
 
@@ -158,8 +158,8 @@ class CircleSlider extends EventEmitter {
 
   _formatOutputAngle(angle) {
     const outputAngle = this.clockwise === true ?
-      CircleSlider.modulo(((360 + Math.round(angle)) - this.startOffset), 360) :
-      CircleSlider.modulo(((360 - Math.round(angle)) + this.startOffset), 360);
+      CircleSlider._modulo(((360 + Math.round(angle)) - this.startOffset), 360) :
+      CircleSlider._modulo(((360 - Math.round(angle)) + this.startOffset), 360);
     return outputAngle;
   }
 
@@ -195,7 +195,7 @@ class CircleSlider extends EventEmitter {
   }
 
   // % can return negative numbers
-  static modulo(n, m) {
+  static _modulo(n, m) {
     return ((n % m) + m) % m;
   }
 

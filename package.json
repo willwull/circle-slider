@@ -4,7 +4,7 @@
   "description": "A slider, except it's round",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "start": "webpack-dev-server --open --inline",
     "build": "babel src/index.js -o lib/index.js",
     "build:demo": "webpack",
@@ -41,6 +41,7 @@
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0",
     "gh-pages": "^1.1.0",
+    "jest": "^22.4.3",
     "style-loader": "^0.20.3",
     "webpack": "^3.7.1",
     "webpack-dev-server": "^2.9.1"
